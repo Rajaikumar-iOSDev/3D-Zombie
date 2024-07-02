@@ -29,6 +29,11 @@ func main() {
         positions[i] = rl.NewVector3(float32(rl.GetRandomValue(-15, 15)), heights[i]/2.0, float32(rl.GetRandomValue(-15, 15)))
         colors[i] = rl.NewColor(uint8(rl.GetRandomValue(20, 255)), uint8(rl.GetRandomValue(10, 55)), 30, 255)
     }
+    //Load handgun model
+    model := rl.LoadModel("plane.obj");                  // Load model
+    texture := rl.LoadTexture("plane_diffuse.png");  // Load model texture
+    mat1 := model.GetMaterials()
+    mat1[0].GetMap(rl.MapDiffuse).Texture = texture // Set model diffuse texture
 
     rl.DisableCursor() // Limit cursor to relative movement inside the window
 
@@ -40,14 +45,18 @@ func main() {
 
         rl.BeginDrawing()
 
-        rl.ClearBackground(rl.RayWhite)
+        rl.ClearBackground(rl.White)
 
         rl.BeginMode3D(camera)
-		rl.DrawPlane(rl.NewVector3(0.0, 0.0, 0.0), rl.NewVector2(32.0, 32.0), rl.LightGray)
+		rl.DrawPlane(rl.NewVector3(0.0, 0.0, 0.0), rl.NewVector2(102.0, 102.0), rl.Brown)
         for i := 0; i < maxColumns; i++ {
+            // rl.NewBoundingBox(rl.NewVector3(positions[i].X-1.0, positions[i].Y-heights[i]/2.0, positions[i].Z-1.0), rl.NewVector3(positions[i].X+1.0, positions[i].Y+heights[i]/2.0, positions[i].Z+1.0))
             rl.DrawCube(positions[i], 2.0, heights[i], 2.0, colors[i])
             rl.DrawCubeWires(positions[i], 2.0, heights[i], 2.0, rl.Gray)
         }
+        rl.DrawModel(model,camera.Target,0.03,rl.White)
+        // rl.DrawGrid(10, 10.0)
+        // rl.DrawModelWires(handGun,camera.Target,1.0,rl.Blue)
 
         rl.EndMode3D()
 
